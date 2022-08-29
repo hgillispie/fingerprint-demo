@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Travel0 Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="https://d2qcgv1x1k2it7.cloudfront.net/css/bootstrap.min.css">
+
+    <!-- ################################################################ -->
+    <!-- Comment out one of the stylesheets below to styling on lock   -->  
+    <!-- ################################################################ -->
+    <link rel="stylesheet" href="https://d2qcgv1x1k2it7.cloudfront.net/css/v2/lock-normal-overrides.css">
+    <!-- <link rel="stylesheet" href="https://d2qcgv1x1k2it7.cloudfront.net/css/v2/lock-transparent-overrides.css"> -->
+
+    <!-- start Mixpanel -->
+      <!--
+    <script type="text/javascript">
+        (function(e,a){if(!a.__SV){var b=window;try{var c,l,i,j=b.location,g=j.hash;c=function(a,b){return(l=a.match(RegExp(b+"=([^&]*)")))?l[1]:null};g&&c(g,"state")&&(i=JSON.parse(decodeURIComponent(c(g,"state"))),"mpeditor"===i.action&&(b.sessionStorage.setItem("_mpcehash",g),history.replaceState(i.desiredHash||"",e.title,j.pathname+j.search)))}catch(m){}var k,h;window.mixpanel=a;a._i=[];a.init=function(b,c,f){function e(b,a){var c=a.split(".");2==c.length&&(b=b[c[0]],a=c[1]);b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments, 0)))}}
+        var d=a;"undefined"!==typeof f?d=a[f]=[]:f="mixpanel";d.people=d.people||[];d.toString=function(b){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);b||(a+=" (stub)");return a};d.people.toString=function(){return d.toString(1)+".people (stub)"};k="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+        for(h=0;h<k.length;h++)e(d,k[h]);a._i.push([b,c,f])};a.__SV=1.2;b=e.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"https://d2qcgv1x1k2it7.cloudfront.net/js/mixpanel.min.js".match(/^\/\//)?"https://d2qcgv1x1k2it7.cloudfront.net/js/mixpanel.min.js":"https://d2qcgv1x1k2it7.cloudfront.net/js/mixpanel.min.js";c=e.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c)}})(document,window.mixpanel||[]);
+        mixpanel.init("e24e7cbd9807c3dc78a41312c7860c50");
+    </script>
+    <!-- end Mixpanel -->
+
+    <!-- surpress bootstrap's webkit appearance, otherwise SIWA button doesn't render correctly after Lock 11.19 -->
+  <!--   <style type="text/css">
+        .auth0-lock-social-button {
+          appearance: none !important; 
+          -webkit-appearance: none !important;
+        }
+      </style>
+</head>
+
+<body>
+
+    <!-- ################################################ -->
+    <!-- Comment out the below lines to enable Lock Login -->
+    <!-- NOTE: You must comment out the custom login SPA  -->
+    <!--          located at the bottom of this page      -->
+    <!-- #################################################-->
+ 
+    <nav class="main-header navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+        <div class="container"><a href="/" class="navbar-brand mx-auto">Travel0</a></div>
+    </nav>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.auth0.com/js/lock/11.27.1/lock.min.js"></script>
+
+    <script>
+        // Decode utf8 characters properly
+        var config = JSON.parse(decodeURIComponent(escape(window.atob('@@config@@'))));
+        config.extraParams = config.extraParams || {};
+        var connection = config.connection;
+        var prompt = config.prompt || config.extraParams.prompt;
+        var languageDictionary = {
+            title: 'Log In'
+        };
+        var language;
+        if (typeof config.dict === 'string') {
+            language = config.dict;
+        }
+        var loginHint = config.extraParams.login_hint;
+        var logo = 'https://d2qcgv1x1k2it7.cloudfront.net/icons/logo/travel0-green.svg'
+        if (config.callbackURL && config.callbackURL.includes('.hooli.corporate.')) {
+            logo = 'https://d2qcgv1x1k2it7.cloudfront.net/icons/icon-hooli-logo.png'
+        }
+
+        var lock = new Auth0Lock(config.clientID, config.auth0Domain, {
+            configurationBaseUrl: config.clientConfigurationBaseUrl,
+            overrides: {
+                __tenant: config.auth0Tenant,
+                __token_issuer: document.origin
+            },
+            auth: {
+                redirectUrl: config.callbackURL,
+                responseType: (config.internalOptions || {}).response_type ||
+                    (config.callbackOnLocationHash ? 'token' : 'code'),
+                params: config.internalOptions
+            },
+            assetsUrl: config.assetsUrl,
+            allowedConnections: connection ? [connection] : null,
+            rememberLastLogin: !prompt,
+            language: language,
+            languageDictionary: languageDictionary,
+            theme: {
+                logo: logo,
+                primaryColor: '#03C07B'
+            },
+            //container: "widget",
+            prefill: loginHint ? { email: loginHint, username: loginHint } : null,
+            closable: false,
+            initialScreen: prompt === "signup" ? "signUp" : "login",
+            avatar: null,
+            defaultADUsernameFromEmailPrefix: false,
+            // uncomment if you want small buttons for social providers
+            // socialButtonStyle: 'small'
+        });
+
+        lock.show({
+            // allowedConnections: ['google-oauth2'],
+        });
+
+        var validEvents = [
+          'unrecoverable_error',
+          'authenticated',
+          'authorization_error',
+          'signin ready',
+          'signup ready',
+          'forgot_password ready',
+          'socialOrPhoneNumber ready',
+          'socialOrEmail ready',
+          'vcode ready',
+          'forgot_password submit',
+          'signin submit',
+          'signup submit',
+          'socialOrPhoneNumber submit',
+          'socialOrEmail submit',
+          'vcode submit',
+          'federated login'
+        ];
+
+        validEvents.forEach(function (e) {
+          lock.on(e, function (args) {
+            mixpanel && mixpanel.track(`Auth0 Lock: ${e}`, args);
+          });
+        });
+    </script>
+
+
+    <!-- ###################################################### -->
+    <!-- Comment out the below lines to enable custom SPA Login -->
+    <!--   NOTE: You must comment out Auth0 Lock lines above    -->
+    <!-- ######################################################
+  <html>
+<body>
+    <div id="root"></div>
+    <script src="https://d16xfqcuk23qg0.cloudfront.net/versions/3.0.0/bundle.min.js"></script>
+    <script>
+        const config = JSON.parse(decodeURIComponent(escape(window.atob("@@config@@"))));
+        new window.LoginWidget().init({
+          pageConfig: config
+        });
+    </script>
+ 
+ -->
+</body>
+
+</html>
